@@ -20,5 +20,11 @@ pipeline {
                 '''
             }
         }
+
+        stage('Build') {
+            steps {
+                echo 'Test stage'
+            }
+        }
     }
 }
