@@ -12,7 +12,7 @@ pipeline {
             steps {
                 sh '''
                     ls -la
-                    node --verison
+                    node --version
                     npm --version
                     npm ci
                     npm run build
