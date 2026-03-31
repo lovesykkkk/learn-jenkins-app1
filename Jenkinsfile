@@ -1,10 +1,10 @@
 pipeline {
-    // 전역 에이전트를 사용하지 않음으로써 컨테이너 중첩 방지
     agent none 
 
     environment {
         NETLIFY_SITE_ID = '73813ef4-d1e2-4a85-9504-59c9613b5230'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+        CI = 'true'
     }
 
     stages {
@@ -12,7 +12,6 @@ pipeline {
             agent {
                 docker { 
                     image 'amazon/aws-cli'
-                    // aws-cli 이미지는 기본적으로 실행 후 바로 종료되므로 엔트리포인트 무력화
                     args "--entrypoint=''" 
                 }
             }
@@ -53,7 +52,6 @@ pipeline {
             }
             steps {
                 sh '''
-                    # serve를 로컬에 설치하여 실행
                     npm install serve
                     node_modules/.bin/serve -s build & sleep 10
                     npx playwright test --reporter=html
@@ -67,9 +65,8 @@ pipeline {
             }
             steps {
                 sh '''
-                    export CI=true
                     npm install netlify-cli@20.1.1
-                    node_modules/.bin/netlify deploy --dir=build --skip-deploy-wait
+                    node_modules/.bin/netlify deploy --dir=build
                 '''
             }
         }
@@ -77,7 +74,7 @@ pipeline {
         stage('Approval'){
             agent none
             steps {
-                timeout(time: 15, unit: 'HOURS') {
+                timeout(time: 15, unit: 'MINUTES') {
                     input message: '운영환경에 배포할까요?', ok: '네 배포합니다'
                 }
             }
@@ -89,9 +86,8 @@ pipeline {
             }
             steps {
                 sh '''
-                    export CI=true
                     npm install netlify-cli@20.1.1
-                    node_modules/.bin/netlify deploy --dir=build --prod --skip-deploy-wait
+                    node_modules/.bin/netlify deploy --dir=build --prod
                 '''
             }
         }
