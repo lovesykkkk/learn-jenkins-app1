@@ -109,8 +109,11 @@ pipeline {
 
     post {
         always {
-            // 결과 리포트 수집
-            junit 'jest-results/junit.xml'
+            none {
+                // 결과 리포트 수집
+                junit 'jest-results/junit.xml'
+            }
+            
         }
     }
 }
