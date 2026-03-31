@@ -59,6 +59,19 @@ pipeline {
                 '''
             }
         }
+
+        stage('Prod E2E') {
+
+            environment {
+                CI_ENVIRONMENT_URL = 'https://shiny-beignet-85f4a6.netlify.app'
+            }
+
+            steps {
+                sh '''
+                    npx playwright test --reporter=html
+                '''
+            }
+        }
     }
 
     post {
