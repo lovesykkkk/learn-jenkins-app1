@@ -67,8 +67,9 @@ pipeline {
             }
             steps {
                 sh '''
+                    export CI=true
                     npm install netlify-cli@20.1.1
-                    node_modules/.bin/netlify deploy --dir=build
+                    node_modules/.bin/netlify deploy --dir=build --skip-deploy-wait
                 '''
             }
         }
@@ -88,8 +89,9 @@ pipeline {
             }
             steps {
                 sh '''
+                    export CI=true
                     npm install netlify-cli@20.1.1
-                    node_modules/.bin/netlify deploy --dir=build --prod
+                    node_modules/.bin/netlify deploy --dir=build --prod --skip-deploy-wait
                 '''
             }
         }
@@ -106,6 +108,4 @@ pipeline {
             }
         }
     }
-
-
 }
