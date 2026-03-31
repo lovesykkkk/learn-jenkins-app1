@@ -8,11 +8,32 @@ pipeline {
     }
 
     stages {
+        
+
+        stage('Build') {
+            agent {
+                docker { 
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy' 
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo '빌드 시작..'
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                '''
+            }
+        }
+
         stage('AWS') {
             agent {
                 docker { 
                     image 'amazon/aws-cli'
                     // aws-cli 이미지는 기본적으로 실행 후 바로 종료되므로 엔트리포인트 무력화
+                    reuseNode true
                     args "--entrypoint=''" 
                 }
             }
@@ -24,27 +45,11 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                         aws --version
-                        echo "Hello S3!" > index.html
-                        aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
+                        aws s3 sync build s3://$AWS_S3_BUCKET
                     '''
                 }
                 
                 
-            }
-        }
-
-        stage('Build') {
-            agent {
-                docker { image 'mcr.microsoft.com/playwright:v1.39.0-jammy' }
-            }
-            steps {
-                sh '''
-                    echo '빌드 시작..'
-                    node --version
-                    npm --version
-                    npm ci
-                    npm run build
-                '''
             }
         }
 
