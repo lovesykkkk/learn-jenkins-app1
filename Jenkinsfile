@@ -62,7 +62,9 @@ pipeline {
 
         stage('Approval'){
             steps {
-                input message: '운영환경에 배포할까요?', ok: '네 배포합니다'
+                timeout(time: 15, unit: 'HOURS') {
+                    input message: '운영환경에 배포할까요?', ok: '네 배포합니다'
+                }
             }
         }
 
