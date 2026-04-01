@@ -31,6 +31,7 @@ pipeline {
         }
 
         stage('Build Docker image'){
+            agnet none
             steps {
                 sh 'docker build -t myjenkinsapp .'
             }
