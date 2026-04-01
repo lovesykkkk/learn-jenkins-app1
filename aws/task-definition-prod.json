@@ -5,7 +5,7 @@
     "family": "LearnJenkinsApp-TaskDefinition-Prod",
     "containerDefinitions": [
         {
-            "name": "learnjenkinsapp",
+            "name": "614388036068.dkr.ecr.ap-northeast-2.amazonaws.com/myjenkinsapp:#APP_VERSION#",
             "image": "nginx:1.27-alpine",
             "portMappings": [
                 {
@@ -24,5 +24,5 @@
     "networkMode": "awsvpc",
     "memory": "512",
     "cpu": "256",
-    "executionRoleArn": ""
+    "executionRoleArn": "arn:aws:iam::614388036068:role/ecsTaskExecutionRole"
 }
