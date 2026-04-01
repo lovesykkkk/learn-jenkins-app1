@@ -12,6 +12,31 @@ pipeline {
 
     stages {
 
+        stage('Build') {
+            agent {
+                docker { 
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy' 
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo '빌드 시작..'
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                '''
+            }
+        }
+
+        stage('Build Docker image'){
+            steps {
+                sh 'docker build -t myjenkinsapp .'
+            }
+        }
+
+
         stage('Deploy to AWS') {
             agent {
                 docker { 
@@ -35,24 +60,6 @@ pipeline {
                 }
                 
                 
-            }
-        }
-
-        stage('Build') {
-            agent {
-                docker { 
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy' 
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    echo '빌드 시작..'
-                    node --version
-                    npm --version
-                    npm ci
-                    npm run build
-                '''
             }
         }
 
