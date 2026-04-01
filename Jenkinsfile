@@ -31,9 +31,18 @@ pipeline {
         }
 
         stage('Build Docker image') {
-            agent any
+            agent {
+                docker { 
+                    image 'amazon/aws-cli'
+                    reuseNode true
+                    args "-u root --entrypoint=''" 
+                }
+            }
             steps {
-                sh 'docker build -t myjenkinsapp .'
+                sh '''
+                    amazone-linux-extras install docker
+                    docker build -t myjenkinsapp .
+                '''
             }
         }
 
@@ -42,7 +51,6 @@ pipeline {
             agent {
                 docker { 
                     image 'amazon/aws-cli'
-                    // aws-cli 이미지는 기본적으로 실행 후 바로 종료되므로 엔트리포인트 무력화
                     reuseNode true
                     args "-u root --entrypoint=''" 
                 }
