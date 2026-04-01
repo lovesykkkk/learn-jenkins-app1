@@ -4,6 +4,10 @@ pipeline {
 
     environment {
         AWS_DEFAULT_REGION = 'ap-northeast-2'
+        AWS_ECS_CLUSTER = 'punctual-crocodile-2buaov'
+        AWS_ECS_SERVICE_PROD = 'LearnJenkinsApp-Service-Prod1'
+        AWS_ECS_TD_PROD = 'LearnJenkinsApp-TaskDefinition-Prod'
+
     }
 
     stages {
@@ -25,7 +29,8 @@ pipeline {
                         yum install jq -y
                         LASTEST_TD_REVISTION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.taskDefinition.revision')
                         echo $LASTEST_TD_REVISTION
-                        aws ecs update-service --cluster punctual-crocodile-2buaov --service LearnJenkinsApp-Service-Prod1 --task-definition LearnJenkinsApp-TaskDefinition-Prod:$LASTEST_TD_REVISTION
+                        aws ecs update-service --cluster $AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE_PROD --task-definition $AWS_ECS_TD_PROD:$LASTEST_TD_REVISTION
+                        aws ecs wait services-stable --cluster $AWS_ECS_CLUSTER --services $AWS_ECS_SERVICE_PROD
                     '''
                 }
                 
