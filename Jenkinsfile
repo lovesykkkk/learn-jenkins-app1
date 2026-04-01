@@ -31,7 +31,7 @@ pipeline {
         }
 
         stage('Build Docker image') {
-            agent none
+            agent any
             steps {
                 sh 'docker build -t myjenkinsapp .'
             }
