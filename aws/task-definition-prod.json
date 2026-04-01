@@ -5,8 +5,8 @@
     "family": "LearnJenkinsApp-TaskDefinition-Prod",
     "containerDefinitions": [
         {
-            "name": "614388036068.dkr.ecr.ap-northeast-2.amazonaws.com/myjenkinsapp:#APP_VERSION#",
-            "image": "614388036068.dkr.ecr.ap-northeast-2.amazonaws.com/myjenkinsapp:1.0.73",
+            "name": "learnjenkinsapp",
+            "image": "614388036068.dkr.ecr.ap-northeast-2.amazonaws.com/myjenkinsapp:#APP_VERSION#",
             "portMappings": [
                 {
                     "name": "nginx-80-tip",
